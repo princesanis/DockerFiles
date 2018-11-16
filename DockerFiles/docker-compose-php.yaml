@@ -1,0 +1,21 @@
+# docker-compose-php.yml
+
+version: "3"
+services:
+    web:
+      images: php:7.2-apache
+      ports:
+        - "8080:80"
+      depends_on:
+        - db
+    db:
+      image: mysql
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: example
+    adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 8081:8080
