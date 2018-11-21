@@ -1,0 +1,35 @@
+version: "3"
+services:
+   loadbalancers:
+     image: haproxy
+     deploy:
+       replicas: 2
+     depends_on:
+       - webtier
+
+   webtier:
+     image: mcr.microsoft.com/windows/servercore/iis
+     deploy:
+       replicas: 3
+     depends_on:
+       - cache
+       - search
+       - database
+       - servicetier
+
+   servicetier:
+     image: mcr.microsoft.com/windows/servercore/iis
+     depends_on:
+       - database
+
+   cache:
+     image: redis
+
+   search:
+     image: elasticsearch
+
+   database:
+     image: microsoft/mssql-server-windows-express
+     environment:
+       SA_PASSWORD: "Your_password123"
+       ACCEPT_EULA: "Y"
